@@ -14,7 +14,7 @@ app.listen(PORT, err => {
         ----------
         Running on ${process.env.NODE_ENV}
         ----------
-        Waiting for the command sir!!
+        Waiting for the command sir!
          `);
   }
 });
