@@ -1,11 +1,15 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 mongoose.Promise = global.Promise;
-
+dotenv.config();
 try {
-  mongoose.connect('', {});
+  mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 } catch (e) {
-  mongoose.createConnection();
+  mongoose.createConnection(process.env.MONGO_URL);
 }
 
 mongoose.connection
