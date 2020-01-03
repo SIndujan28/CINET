@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import uniqueValidator from 'mongoose-unique-validator';
 import { hashSync, compareSync } from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 import { passwordConfig } from './user.validation';
 
@@ -18,11 +19,11 @@ const userSchema = new Schema({
       message: '${VALUE} is not a valid email',
     },
   },
-  firstName: {
+  userName: {
     type: String,
     trim: true,
     unique: true,
-    required: [true, 'Name icxs required'],
+    required: [true, 'Name is required'],
   },
   password: {
     type: String,
@@ -53,6 +54,25 @@ userSchema.methods = {
   },
   authenticatePassword(password) {
     return compareSync(password, this.password);
+  },
+  createToken() {
+    return jwt.sign({
+      _id: this._id,
+    }, 'piss off mom for being selfish');
+  },
+  toAuthJSON() {
+    return {
+      _id: this._id,
+      userName: this.userName,
+      email: this.email,
+      token: `Bearer ${this.createToken()}`,
+    };
+  },
+  toJSON() {
+    return {
+      _id: this._id,
+      userName: this.userName,
+    };
   },
 };
 export default mongoose.model('User', userSchema);

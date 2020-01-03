@@ -5,20 +5,20 @@ import User from './user.model';
 export async function signup(req, res) {
   try {
     const user = await User.create(req.body);
-    return res.status(HTTPStatus.CREATED).json(user);
+    return res.status(HTTPStatus.CREATED).json(user.toAuthJSON());
   } catch (error) {
     return res.status(HTTPStatus.BAD_REQUEST).json(error);
   }
 }
 
 export async function login(req, res, next) {
-  res.status(HTTPStatus.OK).json(req.user);
+  res.status(HTTPStatus.OK).json(req.user.toAuthJSON());
   next();
 }
 
 export async function list(req, res) {
   try {
-    const users = await User.find({}, 'email firstName createdAt updatedAt');
+    const users = await User.find({}, 'email userName createdAt updatedAt');
     return res.status(HTTPStatus.OK).json(users);
   } catch (error) {
     return res.status(HTTPStatus.BAD_REQUEST).json(error);
