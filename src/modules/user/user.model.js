@@ -3,7 +3,7 @@ import validator from 'validator';
 import uniqueValidator from 'mongoose-unique-validator';
 import { hashSync, compareSync } from 'bcrypt';
 
-import passwordConfig from './user.validation';
+import { passwordConfig } from './user.validation';
 
 const userSchema = new Schema({
   email: {
@@ -18,11 +18,11 @@ const userSchema = new Schema({
       message: '${VALUE} is not a valid email',
     },
   },
-  name: {
+  firstName: {
     type: String,
     trim: true,
     unique: true,
-    required: [true, 'Name is required'],
+    required: [true, 'Name icxs required'],
   },
   password: {
     type: String,
@@ -33,7 +33,7 @@ const userSchema = new Schema({
       validator(password) {
         return passwordConfig.test(password);
       },
-      message: '{VALUE} is not a valid password',
+      message: '{VALUE} is not a valid password!',
     },
   },
 }, { timestamps: true });
@@ -47,9 +47,9 @@ userSchema.pre('save', function (next) {
   }
   return next();
 });
-userSchema.method = {
+userSchema.methods = {
   _hashpassword(password) {
-    return hashSync(password);
+    return hashSync(password, 10);
   },
   authenticatePassword(password) {
     return compareSync(password, this.password);
