@@ -15,6 +15,11 @@ export default app => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(passport.initialize());
+  app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+      res.status(401).json({ error: `${err.name}: ${err.message}` });
+    }
+  });
 
   if (isDev) {
     app.use(morgan('dev'));

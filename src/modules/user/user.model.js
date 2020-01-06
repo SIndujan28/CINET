@@ -58,7 +58,7 @@ userSchema.methods = {
   createToken() {
     return jwt.sign({
       _id: this._id,
-    }, 'piss off mom for being selfish');
+    }, 'piss off mom for being selfish', { expiresIn: '1h' });
   },
   toAuthJSON() {
     return {
@@ -72,6 +72,7 @@ userSchema.methods = {
     return {
       _id: this._id,
       userName: this.userName,
+      email: this.email,
     };
   },
 };
