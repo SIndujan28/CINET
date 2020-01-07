@@ -29,7 +29,8 @@ export async function list(req, res) {
 
 export async function userById(req, res, next, id) {
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate('following', '_id userName').populate('followers', '_id userName');
+    console.log(`=====${user.photo}`, user.about);
     if (!user) {
       return res.status(HTTPStatus.NOT_FOUND).json('Not found');
     }
@@ -56,6 +57,8 @@ export async function remove(req, res) {
 
 export async function update(req, res) {
   try {
+    const form = new formidable.IncomingForm();
+    form.keepExtensions = true;
     let user = req.profile;
     form.parse(req, (err, fields, files) => {
       if (err) {
@@ -84,3 +87,40 @@ export async function photo(req, res, next) {
   next();
 }
 
+export async function addFollowing(req, res, next) {
+  try {
+    await User.findByIdAndUpdate(req.body.userId, { $push: { following: req.body.followId } });
+    next();
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
+export async function addFollower(req, res) {
+  try {
+    const user = await User.findByIdAndUpdate(req.body.followId, { $push: { followers: req.body.userId } }, { new: true })
+      .populate('following', '_id userName').populate('followers', '_id userName');
+    return res.status(HTTPStatus.OK).json(user);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
+export async function removeFollowing(req, res, next) {
+  try {
+    await User.findByIdAndUpdate(req.body.userId, { $pull: { following: req.body.unfollowId } });
+    next();
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
+export async function removeFollower(req, res) {
+  try {
+    const user = await User.findByIdAndUpdate(req.body.unfollowId, { $pull: { followers: req.body.userId } }, { new: true })
+      .populate('following', '_id userName').populate('followers', '_id userName');
+    return res.status(HTTPStatus.OK).json(user);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}

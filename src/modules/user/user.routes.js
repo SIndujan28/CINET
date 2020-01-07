@@ -16,5 +16,6 @@ routes.delete('/:userId', [requireSignin, hasAuthorization], userController.remo
 routes.put('/:userId', [requireSignin, hasAuthorization], userController.update);
 routes.get('/photo/:userId', userController.photo);
 routes.put('/follow', userController.addFollowing, userController.addFollower);
+routes.put('/follow', userController.removeFollowing, userController.removeFollower);
 export default routes;
 

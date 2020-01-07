@@ -45,6 +45,14 @@ const userSchema = new Schema({
     data: Buffer,
     contentType: String,
   },
+  following: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+  },
+  followers: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+  },
 }, { timestamps: true });
 
 userSchema.plugin(uniqueValidator, {
