@@ -30,6 +30,11 @@ export async function listByUser(req, res) {
   }
 }
 
+export function photo(req, res) {
+  res.set('Content-Type', req.post.photo.contentType);
+  return res.send(req.post.photo.data);
+}
+
 export async function postById(req, res, next, id) {
   try {
     const post = await Post.findById(id).populate('postedBy', '_id userName');
