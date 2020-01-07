@@ -21,7 +21,6 @@ export async function listNewsFeed(req, res) {
 export async function listByUser(req, res) {
   try {
     const posts = await Post.find({ postedBy: req.profile._id })
-      .populate('comments', 'text created')
       .populate('comments.postedBy', '_id userName')
       .populate('postedBy', '_id userName')
       .sort('-createdAt');

@@ -21,7 +21,7 @@ const postSchema = new Schema({
   ],
   comments: [
     {
-      type: String,
+      text: String,
       created: {
         type: Date,
         default: Date.now,
