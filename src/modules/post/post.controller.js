@@ -1,5 +1,6 @@
 import HTTPStatus from 'http-status';
-
+import formidable from 'formidable';
+import fs from 'fs';
 import Post from './post.model';
 
 export async function listNewsFeed(req, res) {
@@ -54,6 +55,7 @@ export function create(req, res) {
   }
   );
 }
+
 export function photo(req, res) {
   res.set('Content-Type', req.post.photo.contentType);
   return res.send(req.post.photo.data);
@@ -79,6 +81,16 @@ export async function checkPoster(req, res, next) {
   next();
 }
 
+export async function remove(req, res) {
+  try {
+    const post = req.post;
+    await post.remove();
+    return res.status(HTTPStatus.OK).json('Post deleted');
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
 export async function like(req, res) {
   try {
     const post = await Post.findByIdAndUpdate(req.body.postId, { $push: { likes: req.body.userId } }, { new: true });
@@ -97,3 +109,27 @@ export async function unlike(req, res) {
   }
 }
 
+export async function addComment(req, res) {
+  try {
+    const comment = req.body.comment;
+    comment.postedBy = req.body.userId;
+    const post = await Post.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true })
+      .populate('comments.postedBy', '_id userName')
+      .populate('postedBy', '_id userName');
+    return res.status(HTTPStatus.OK).json(post);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
+export async function removeComment(req, res) {
+  try {
+    const comment = req.body.comment;
+    const post = await Post.findByIdAndUpdate(req.body.postId, { $pull: { comments: comment } }, { new: true })
+      .populate('comments.postedBy', '_id userName')
+      .populate('postedBy', '_id userName');
+    return res.status(HTTPStatus.OK).json(post);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}

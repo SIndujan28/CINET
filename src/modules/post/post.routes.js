@@ -13,5 +13,7 @@ routes.delete('/:postId', postController.checkPoster, postController.remove);
 routes.put('/new/:userId', postController.create);
 routes.put('/like', postController.like);
 routes.put('/unlike', postController.unlike);
+routes.put('/comment', postController.addComment);
+routes.put('/uncomment', postController.removeComment);
 
 export default routes;
