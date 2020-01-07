@@ -69,3 +69,31 @@ export async function postById(req, res, next, id) {
   }
 }
 
+export async function checkPoster(req, res, next) {
+  const isPoster = req.auth && req.post && req.post.postedBy._id == req.auth._id;
+  if (!isPoster) {
+    return res.status(HTTPStatus.UNAUTHORIZED).json({
+      error: 'User is not authorized to perform the action',
+    });
+  }
+  next();
+}
+
+export async function like(req, res) {
+  try {
+    const post = await Post.findByIdAndUpdate(req.body.postId, { $push: { likes: req.body.userId } }, { new: true });
+    return res.status(HTTPStatus.OK).json(post);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
+export async function unlike(req, res) {
+  try {
+    const post = await Post.findByIdAndUpdate(req.body.postId, { $pull: { likes: req.body.userId } }, { new: true });
+    return res.status(HTTPStatus.OK).json(post);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+

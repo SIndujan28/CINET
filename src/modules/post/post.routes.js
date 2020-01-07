@@ -12,5 +12,6 @@ routes.get('/photo/:postId', postController.photo);
 routes.delete('/:postId', postController.checkPoster, postController.remove);
 routes.put('/new/:userId', postController.create);
 routes.put('/like', postController.like);
+routes.put('/unlike', postController.unlike);
 
 export default routes;
