@@ -29,3 +29,14 @@ export async function listByUser(req, res) {
     return res.status(HTTPStatus.BAD_REQUEST).json(error);
   }
 }
+
+export async function postById(req, res, next, id) {
+  try {
+    const post = await Post.findById(id).populate('postedBy', '_id userName');
+    req.post = post;
+    next();
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
