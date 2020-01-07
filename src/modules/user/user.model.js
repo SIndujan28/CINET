@@ -37,6 +37,14 @@ const userSchema = new Schema({
       message: '{VALUE} is not a valid password!',
     },
   },
+  about: {
+    type: String,
+    trim: true,
+  },
+  photo: {
+    data: Buffer,
+    contentType: String,
+  },
 }, { timestamps: true });
 
 userSchema.plugin(uniqueValidator, {
@@ -73,6 +81,8 @@ userSchema.methods = {
       _id: this._id,
       userName: this.userName,
       email: this.email,
+      about: this.about,
+      photo: this.photo,
     };
   },
 };

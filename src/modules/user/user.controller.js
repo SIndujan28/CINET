@@ -1,5 +1,7 @@
 import HTTPStatus from 'http-status';
 import _ from 'lodash';
+import formidable from 'formidable';
+import fs from 'fs';
 import User from './user.model';
 
 export async function signup(req, res) {
@@ -55,10 +57,30 @@ export async function remove(req, res) {
 export async function update(req, res) {
   try {
     let user = req.profile;
-    user = _.extend(user, req.body);
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        return res.status(HTTPStatus.NOT_ACCEPTABLE).json({
+          error: 'Photo could not be uploaded ',
+        });
+      }
+      user = _.extend(user, fields);
+      if (files.photo) {
+        user.photo.data = fs.readFileSync(files.photo.path);
+        user.photo.contentType = files.photo.type;
+      }
+    });
     await user.save();
     return res.status(HTTPStatus.ACCEPTED).json(user);
   } catch (error) {
     return res.status(HTTPStatus.BAD_REQUEST).json(error);
   }
 }
+
+export async function photo(req, res, next) {
+  if (req.profile.photo.data) {
+    res.set('Content-Type', req.profile.photo.contentType);
+    return res.send(req.profile.photo.data);
+  }
+  next();
+}
+

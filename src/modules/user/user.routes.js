@@ -14,5 +14,7 @@ routes.get('/list', userController.list);
 routes.get('/:userId', [requireSignin], userController.read);
 routes.delete('/:userId', [requireSignin, hasAuthorization], userController.remove);
 routes.put('/:userId', [requireSignin, hasAuthorization], userController.update);
+routes.get('/photo/:userId', userController.photo);
+routes.put('/follow', userController.addFollowing, userController.addFollower);
 export default routes;
 
