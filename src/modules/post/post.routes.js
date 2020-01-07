@@ -10,5 +10,7 @@ routes.get('/feed/:userId', postController.listNewsFeed);
 routes.get('/by/:userId', postController.listByUser);
 routes.get('/photo/:postId', postController.photo);
 routes.delete('/:postId', postController.checkPoster, postController.remove);
+routes.put('/new/:userId', postController.create);
+routes.put('/like', postController.like);
 
 export default routes;

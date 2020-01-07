@@ -30,6 +30,30 @@ export async function listByUser(req, res) {
   }
 }
 
+export function create(req, res) {
+  const form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return res.status(HTTPStatus.BAD_REQUEST).json({
+        error: 'image could not be uploaded',
+      });
+    }
+    const post = new Post(fields);
+    post.postedBy = req.profile;
+    if (files.photo) {
+      post.photo.data = fs.readFileSync(files.photo.path);
+      post.photo.contentType = files.photo.type;
+    }
+    post.save((error, result) => {
+      if (err) {
+        return res.status(HTTPStatus.BAD_REQUEST).json(error);
+      }
+      return res.status(HTTPStatus.CREATED).json(result);
+    });
+  }
+  );
+}
 export function photo(req, res) {
   res.set('Content-Type', req.post.photo.contentType);
   return res.send(req.post.photo.data);
