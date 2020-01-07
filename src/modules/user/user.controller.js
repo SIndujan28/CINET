@@ -124,3 +124,14 @@ export async function removeFollower(req, res) {
     return res.status(HTTPStatus.BAD_REQUEST).json(error);
   }
 }
+
+export async function findPeople(req, res) {
+  try {
+    const following = req.people.following;
+    following.push(req.profile._id);
+    const users = await User.find({ _id: { $nin: following } }).select('userName');
+    return res.status(HTTPStatus.OK).json(users);
+  } catch (error) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
