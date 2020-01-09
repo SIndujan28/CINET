@@ -1,14 +1,13 @@
 import { Router } from 'express';
 
 import * as userController from './user.controller';
-import { authLocal, authJwt } from './../../services/auth.service';
 import { requiredSignin, requireSignin, hasAuthorization, signin, signout } from './../../services/valid.service';
 
 const routes = new Router();
 
 routes.param('userId', userController.userById);
 routes.post('/signup', userController.signup);
-routes.post('/login', signin);
+routes.post('/signin', signin);
 routes.get('/signout', signout);
 routes.get('/list', userController.list);
 routes.get('/:userId', [requireSignin], userController.read);
