@@ -5,18 +5,26 @@ This is backend-service API written in NodeJs.The API allows anyone to signup wi
 
 ## Requirements
   The core modules used for this developments are
-    NodeJs
-    mongoose
-    express
-    jsonwebtoken
+   1. NodeJs
+   2. mongoose
+   3. express
+   4. jsonwebtoken
 
 ## Installation
+ ### Prerequisites
+1.Install Nodejs using this [guide](https://nodejs.org/en/download/).
+2.Install [npm](https://www.npmjs.com/get-npm) or [yarn](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
 
+  ### Steps to reproduce locally
+  1. Clone this repository
 ```bash
-npm install
+     git clone git@github.com:SIndujan28/CINET.git
 ```
-
-If you prefer yarn,
+  2. Run the following command to install all the neccessary modules.
+```
+     npm install
+```
+   If you prefer yarn,
 ```bash
 yarn install
 ```
